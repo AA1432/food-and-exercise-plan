@@ -1,3 +1,23 @@
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAJWI6bzgha26NWSfJaFCZ9OKoafeYqPwQ",
+    authDomain: "food-and-exercise-plan.firebaseapp.com",
+    projectId: "food-and-exercise-plan",
+    storageBucket: "food-and-exercise-plan.firebasestorage.app",
+    messagingSenderId: "363003929755",
+    appId: "1:363003929755:web:dde1ad36eebd6861eb123e"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+
 // ================= Firebase SDK 임포트 및 초기화 =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
