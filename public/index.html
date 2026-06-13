@@ -3,436 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>식단 and 운동 매니저</title>
+    <title>식단 and 운동 관리 시스템</title>
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --danger-color: #f44336;
-            --warning-color: #ff9800;
-            --bg-color: #f9f9f9;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --gray-color: #777;
-            --border-color: #ddd;
+            --primary-color: #4f46e5;
+            --bg-color: #f9fafb;
+            --card-color: #ffffff;
+            --text-color: #1f2937;
+            --danger-color: #dc2626;
+            --warning-color: #f59e0b;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 60px; }
-
-        /* 상단 네비게이션 및 인증 영역 */
-        header {
-            background-color: var(--card-bg);
-            padding: 15px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        h1 { font-size: 20px; color: var(--primary-color); }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); }
+        header { background-color: var(--primary-color); color: white; padding: 1rem; text-align: center; position: relative; }
+        .auth-status-container { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: white; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .auth-status-container button { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .auth-status-container button:hover { background: white; color: var(--primary-color); }
+        .btn-withdraw { background: rgba(220, 38, 38, 0.3) !important; border: 1px solid var(--danger-color) !important; color: #fee2e2 !important; }
+        .btn-withdraw:hover { background: var(--danger-color) !important; color: white !important; }
         
-        .auth-status-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #fff;
-        }
-        .status-badge.user-mode { background-color: var(--primary-color); }
-        .status-badge.guest-mode { background-color: var(--gray-color); }
-
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-secondary { background-color: var(--secondary-color); color: white; }
-        .btn-danger { background-color: var(--danger-color); color: white; }
-
-        /* 메뉴 탭 */
-        nav {
-            display: flex;
-            background: #fff;
-            border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 15px 10px;
-            text-align: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--gray-color);
-            white-space: nowrap;
-            border-bottom: 3px solid transparent;
-        }
-        .tab-btn.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        /* 컨텐츠 영역 */
-        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
-        .page { display: none; }
+        nav { display: flex; justify-content: center; background-color: #3730a3; padding: 0.5rem; gap: 10px; flex-wrap: wrap; }
+        nav button { background: none; border: none; color: white; padding: 0.7rem 1.2rem; cursor: pointer; font-size: 1rem; border-radius: 5px; transition: 0.3s; }
+        nav button:hover, nav button.active { background-color: var(--primary-color); font-weight: bold; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .page { display: none; background: var(--card-color); padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .page.active { display: block; }
+        h2 { border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 0; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .card { border: 1px solid #e5e7eb; padding: 1rem; border-radius: 8px; background: #f3f4f6; display: flex; flex-direction: column; justify-content: space-between; }
+        .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 0.3rem; font-weight: bold; }
+        .form-group input, .form-group select { padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-size: 0.95rem; }
+        button.btn { background-color: var(--primary-color); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button.btn:hover { background-color: #3730a3; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: center; table-layout: fixed; }
+        th, td { border: 1px solid #e5e7eb; padding: 0.7rem; word-break: break-all; }
+        th { background-color: #f3f4f6; }
+        
+        .clickable-cell { cursor: pointer; transition: 0.2s; }
+        .clickable-cell:hover { background-color: #d1e7dd !important; opacity: 0.9; }
+        .clickable-workout-cell { cursor: pointer; transition: 0.2s; }
+        .clickable-workout-cell:hover { background-color: #cfe2ff !important; opacity: 0.9; }
+        
+        .alarm-badge { font-size: 0.9rem; margin-left: 3px; vertical-align: middle; }
+        .alarm-on { color: var(--warning-color); font-weight: bold; }
+        .alarm-off { color: #9ca3af; }
+        
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 1rem; }
+        .calendar-header { font-weight: bold; text-align: center; background: #e5e7eb; padding: 0.5rem; border-radius: 5px; }
+        .calendar-day { border: 1px solid #e5e7eb; min-height: 100px; padding: 5px; background: white; border-radius: 5px; font-size: 0.85rem; position: relative; }
+        .calendar-day .day-num { font-weight: bold; margin-bottom: 5px; display: block; }
+        .event-tag { display: block; padding: 4px; margin: 4px 0; border-radius: 3px; font-size: 0.75rem; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; cursor: pointer; transition: 0.2s; }
+        .event-tag:hover { filter: brightness(85%); }
+        .tag-meal { background-color: #10b981; }
+        .tag-workout { background-color: #3b82f6; }
 
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        h2 { font-size: 18px; margin-bottom: 15px; border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        .calendar-title-container { display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; }
+        .calendar-title-container h3:hover { color: var(--primary-color); text-decoration: underline; }
+        .date-picker-inline { display: none; gap: 5px; }
 
-        /* 폼 스타일 */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
-        .form-control {
-            width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px;
-        }
-        .form-row { display: flex; gap: 10px; }
-        .form-row .form-group { flex: 1; }
+        .action-box { display: flex; gap: 10px; margin-top: 1rem; justify-content: flex-end; }
+        .btn-danger { background-color: var(--danger-color) !important; }
+        .btn-danger:hover { background-color: #b91c1c !important; }
 
-        /* 테이블 스케줄러 스타일 */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: center; background: #fff; }
-        th, td { border: 1px solid var(--border-color); padding: 10px; font-size: 13px; }
-        th { background-color: #f2f2f2; font-weight: bold; }
-        td { cursor: pointer; height: 60px; vertical-align: top; }
-        td:hover { background-color: #f5f5f5; }
-        .event-item {
-            font-size: 11px; padding: 3px; margin-top: 3px; border-radius: 3px; text-align: left;
-            background-color: #e3f2fd; border-left: 3px solid var(--secondary-color);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .event-item.meal-item { background-color: #e8f5e9; border-left-color: var(--primary-color); }
-
-        /* 달력 스타일 */
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .calendar-title { font-size: 18px; font-weight: bold; cursor: pointer; color: #333; text-decoration: underline; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 11.4%); gap: 1%; text-align: center; }
-        .cal-day-header { font-weight: bold; padding: 5px 0; background: #eee; border-radius: 4px; font-size: 12px; }
-        .cal-cell {
-            background: #fff; border: 1px solid var(--border-color); min-height: 90px; border-radius: 4px;
-            padding: 4px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px;
-        }
-        .cal-cell:hover { background: #f9f9f9; }
-        .cal-cell .day-num { font-weight: bold; font-size: 12px; margin-bottom: 3px; }
-        .cal-cell .cal-events { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; max-height: 65px; }
-
-        /* 모달 스타일 기본 */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; padding: 15px;
-        }
-        .modal.active { display: flex; }
-        .modal-content {
-            background: white; padding: 20px; border-radius: 8px; width: 100%; max-width: 450px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative;
-        }
-        .modal-close {
-            position: absolute; top: 12px; right: 15px; font-size: 20px; cursor: pointer; color: var(--gray-color);
-        }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-
-        .delete-section {
-            display: flex; gap: 10px; margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px;
-        }
-        .delete-section .btn { flex: 1; }
+        /* 모달 팝업 공통 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 2rem; border-radius: 10px; width: 90%; max-width: 450px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+        .modal-close { float: right; cursor: pointer; font-size: 1.5rem; font-weight: bold; }
+        .modal-action-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 1.5rem; }
+        .modal-action-row { display: flex; gap: 8px; }
+        .auth-helper-links { display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 1rem; }
+        .auth-helper-links span { cursor: pointer; color: var(--primary-color); text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-top">
-            <h1>식단 and 운동 매니저</h1>
-            <div class="auth-status-container" id="authStatusContainer">
-                <span class="status-badge guest-mode" id="statusBadge">비회원 모드</span>
-                <span id="userEmailDisplay" style="display: none; font-weight: bold;"></span>
-                <button class="btn btn-primary" id="loginBtn" onclick="openModal('authModal')">로그인 / 회원가입</button>
-                <button class="btn btn-danger" id="logoutBtn" style="display: none;">로그아웃</button>
-                <button class="btn btn-secondary" id="unregisterBtn" style="display: none; background-color: #777;">회원탈퇴</button>
-            </div>
+<header>
+    <h1>🥗 식단 and 운동 매니저 🏋️</h1>
+    <div class="auth-status-container" id="auth-status-area">
+        <span id="user-display-name">로그인이 필요합니다.</span>
+        <button id="btn-auth-action" onclick="openAuthModal()">로그인</button>
+        <button id="btn-withdraw" class="btn-withdraw" style="display: none;" onclick="handleAccountWithdrawal()">회원탈퇴</button>
+    </div>
+</header>
+
+<nav>
+    <button onclick="switchPage('food-info')" id="nav-food-info">음식 영양 정보</button>
+    <button onclick="switchPage('exercise-info')" id="nav-exercise-info">운동 칼로리 소모 정보</button>
+    <button onclick="switchPage('diet-page')" id="nav-diet-page">식단</button>
+    <button onclick="switchPage('exercise-page')" id="nav-exercise-page">운동</button>
+    <button onclick="switchPage('calendar-page')" id="nav-calendar-page">달력</button>
+</nav>
+
+<div class="container">
+    <div id="login-required-notice" style="display: none; text-align: center; padding: 3rem; background: #fee2e2; border-radius: 10px; color: #b91c1c; font-weight: bold; margin-bottom: 2rem;">
+        🔒 회원 맞춤형 기능입니다. 안전한 데이터 저장을 위해 먼저 로그인을 해주세요!
+    </div>
+
+    <div id="food-info" class="page">
+        <h2>🍎 음식 영양 정보 검색</h2>
+        <div class="form-group">
+            <input type="text" id="food-search" placeholder="음식 이름을 입력하세요..." onkeyup="searchFood()">
         </div>
-    </header>
+        <table>
+            <thead>
+                <tr><th>음식명</th><th>칼로리 (kcal)</th><th>탄수화물 (g)</th><th>단백질 (g)</th><th>지방 (g)</th></tr>
+            </thead>
+            <tbody id="food-table-body"></tbody>
+        </table>
+    </div>
 
-    <nav>
-        <button class="tab-btn active" onclick="switchTab('infoTab')">음식 영양 정보</button>
-        <button class="tab-btn" onclick="switchTab('exerciseInfoTab')">운동 칼로리</button>
-        <button class="tab-btn" onclick="switchTab('dietTab')">식단</button>
-        <button class="tab-btn" onclick="switchTab('exerciseTab')">운동</button>
-        <button class="tab-btn" onclick="switchTab('calendarTab')">달력</button>
-    </nav>
-
-    <div class="container">
-        <div id="infoTab" class="page active">
-            <div class="card">
-                <h2>음식 영양 성분 검색</h2>
-                <div class="form-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="foodSearchInput" class="form-control" placeholder="음식 이름을 입력하세요 (예: 닭가슴살, 사과)">
-                    <button class="btn btn-primary" onclick="searchFood()">검색</button>
-                </div>
-                <div id="foodSearchResult"></div>
-            </div>
+    <div id="exercise-info" class="page">
+        <h2>⚡ 운동 칼로리 소모 정보</h2>
+        <div class="form-group">
+            <input type="text" id="ex-search" placeholder="운동 이름을 입력하세요..." onkeyup="searchExerciseInfo()">
         </div>
+        <table>
+            <thead>
+                <tr><th>운동명</th><th>시간당 소모 칼로리 (kcal/hr)</th><th>강도</th></tr>
+            </thead>
+            <tbody id="ex-table-body"></tbody>
+        </table>
+    </div>
 
-        <div id="exerciseInfoTab" class="page">
+    <div id="diet-page" class="page">
+        <h2>📝 식단 관리</h2>
+        <div class="grid">
             <div class="card">
-                <h2>운동 칼로리 소모 검색</h2>
-                <div class="form-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="exerciseSearchInput" class="form-control" placeholder="운동 이름을 입력하세요 (예: 달리기, 플랭크)">
-                    <button class="btn btn-secondary" onclick="searchExerciseInfo()">검색</button>
-                </div>
-                <div id="exerciseSearchResult"></div>
-            </div>
-        </div>
-
-        <div id="dietTab" class="page">
-            <div class="card">
-                <h2>식단 입력</h2>
-                <form id="dietForm" onsubmit="saveDiet(event)">
-                    <div class="form-row">
+                <div>
+                    <h3>식단 입력</h3>
+                    <form id="diet-form" onsubmit="saveDiet(event)">
+                        <div class="form-group"><label>날짜</label><input type="date" id="diet-date" required></div>
+                        <div class="form-group"><label>식사 시간</label><input type="time" id="diet-time" required></div>
                         <div class="form-group">
-                            <label>날짜</label>
-                            <input type="date" id="dietDate" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>식사 유형</label>
-                            <select id="dietType" class="form-control" required>
-                                <option value="아침">아침</option>
-                                <option value="점심">점심</option>
-                                <option value="저녁">저녁</option>
-                                <option value="간식">간식</option>
+                            <label>구분</label>
+                            <select id="diet-type" required>
+                                <option value="아침">아침</option><option value="점심">점심</option>
+                                <option value="저녁">저녁</option><option value="간식">간식</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 2;">
-                            <label>메뉴명</label>
-                            <input type="text" id="dietMenu" class="form-control" placeholder="예: 닭가슴살 샐러드" required>
-                        </div>
-                        <div class="form-group">
-                            <label>칼로리 (kcal)</label>
-                            <input type="number" id="dietCalories" class="form-control" placeholder="0" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>알람 설정 시간</label>
-                            <input type="time" id="dietAlarmTime" class="form-control">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">저장</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <h2>주간 식단표 (일정 클릭 시 수정/삭제 가능)</h2>
-                    <input type="date" id="dietWeekPicker" class="form-control" style="width: 150px;" onchange="renderWeeklyDiet()">
-                </div>
-                <table id="weeklyDietTable">
-                    <thead>
-                        <tr>
-                            <th>구분</th>
-                            <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th>일</th>
-                        </tr>
-                    </thead>
-                    <tbody id="weeklyDietBody"></tbody>
-                </table>
-                <div class="delete-section">
-                    <button class="btn btn-danger" onclick="deleteWeeklyData('meals')">주간 일정 삭제</button>
-                    <button class="btn btn-danger" onclick="clearAllData('meals')" style="background-color: #b71c1c;">전체 식단 삭제</button>
+                        <div class="form-group"><label>메뉴명</label><input type="text" id="diet-menu" required></div>
+                        <div class="form-group"><label>칼로리 (kcal)</label><input type="number" id="diet-kcal" required></div>
+                        <div class="form-group"><label>⏰ 알람 시간 설정 (선택)</label><input type="time" id="diet-alarm"></div>
+                        <button type="submit" class="btn" id="btn-diet-submit">식단 저장</button>
+                    </form>
                 </div>
             </div>
-        </div>
-
-        <div id="exerciseTab" class="page">
-            <div class="card">
-                <h2>운동 계획 입력</h2>
-                <form id="exerciseForm" onsubmit="saveExercise(event)">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>날짜</label>
-                            <input type="date" id="exerciseDate" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 2;">
-                            <label>운동명</label>
-                            <input type="text" id="exerciseName" class="form-control" placeholder="예: 스쿼트, 조깅" required>
-                        </div>
-                        <div class="form-group">
-                            <label>소모 칼로리 (kcal)</label>
-                            <input type="number" id="exerciseCalories" class="form-control" placeholder="0" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>시작 시간</label>
-                            <input type="time" id="exerciseStartTime" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>종료 시간</label>
-                            <input type="time" id="exerciseEndTime" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>알람 설정 시간</label>
-                            <input type="time" id="exerciseAlarmTime" class="form-control">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-secondary" style="width: 100%;">저장</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <h2>주간 운동표 (일정 클릭 시 수정/삭제 가능)</h2>
-                    <input type="date" id="exerciseWeekPicker" class="form-control" style="width: 150px;" onchange="renderWeeklyExercise()">
-                </div>
-                <table id="weeklyExerciseTable">
-                    <thead id="weeklyExerciseHead"></thead>
-                    <tbody id="weeklyExerciseBody"></tbody>
-                </table>
-                <div class="delete-section">
-                    <button class="btn btn-danger" onclick="deleteWeeklyData('workouts')">주간 일정 삭제</button>
-                    <button class="btn btn-danger" onclick="clearAllData('workouts')" style="background-color: #b71c1c;">전체 운동 삭제</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="calendarTab" class="page">
-            <div class="card">
-                <div class="calendar-header">
-                    <button class="btn btn-primary" onclick="changeMonth(-1)">◀ 이전달</button>
-                    <div class="calendar-title" id="calendarTitle" onclick="toggleQuickNav()">2026년 06월</div>
-                    <button class="btn btn-primary" onclick="changeMonth(1)">다음달 ▶</button>
-                </div>
-                
-                <div id="quickNavContainer" class="form-row" style="display: none; margin-bottom: 15px; justify-content: center; gap: 10px;">
-                    <select id="quickYear" class="form-control" style="width: 100px;"></select>
-                    <select id="quickMonth" class="form-control" style="width: 80px;"></select>
-                    <button class="btn btn-primary" onclick="applyQuickNav()">이동</button>
-                </div>
-
-                <div class="calendar-grid" id="calendarGrid"></div>
-                
-                <div class="delete-section" style="margin-top:20px;">
-                    <button class="btn btn-danger" onclick="deleteMonthlyData()">한달 일정 삭제</button>
-                    <button class="btn btn-danger" onclick="clearAllSystemData()" style="background-color: #b71c1c;">전체 일정 삭제</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('authModal')">&times;</span>
-            <h2 id="authModalTitle" style="margin-bottom:20px;">로그인</h2>
-            
-            <div class="form-group">
-                <label>이메일 주소</label>
-                <input type="email" id="authEmail" class="form-control" placeholder="example@email.com">
-            </div>
-            <div class="form-group">
-                <label>비밀번호</label>
-                <input type="password" id="authPassword" class="form-control" placeholder="비밀번호 입력">
-            </div>
-
-            <div style="margin-top: 15px; font-size: 13px;">
-                <span id="authToggleText">계정이 없으신가요?</span>
-                <a href="#" id="authToggleLink" onclick="toggleAuthMode(event)" style="color: var(--secondary-color); font-weight: bold; text-decoration: none; margin-left:5px;">회원가입하기</a>
-            </div>
-            
-            <div style="margin-top: 5px; font-size: 13px;" id="findPwdContainer">
-                <a href="#" onclick="findPassword(event)" style="color: var(--gray-color); text-decoration: none;">비밀번호를 잊어버리셨나요?</a>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-gray" onclick="closeModal('authModal')" style="background:#ccc;">취소</button>
-                <button class="btn btn-primary" id="authSubmitBtn">로그인</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="detailModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('detailModal')">&times;</span>
-            <h2>일정 상세 정보</h2>
-            <input type="hidden" id="modalTargetType">
-            <input type="hidden" id="modalEventId">
-            
-            <div class="form-group">
-                <label>날짜 수정</label>
-                <input type="date" id="modalDate" class="form-control">
-            </div>
-            <div class="form-group" id="modalTypeRow">
-                <label>구분 (식사 유형)</label>
-                <select id="modalSubCategory" class="form-control">
-                    <option value="아침">아침</option>
-                    <option value="점심">점심</option>
-                    <option value="저녁">저녁</option>
-                    <option value="간식">간식</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label id="modalTitleLabel">명칭</label>
-                <input type="text" id="modalTitleInput" class="form-control">
-            </div>
-            <div class="form-row" id="modalTimeRow">
-                <div class="form-group">
-                    <label>시작 시간</label>
-                    <input type="time" id="modalStartTime" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>종료 시간</label>
-                    <input type="time" id="modalEndTime" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>칼로리 (kcal)</label>
-                <input type="number" id="modalCalories" class="form-control">
-            </div>
-            <div class="form-row" style="align-items: center; background: #f0f0f0; padding: 10px; border-radius: 4px; margin-top:10px;">
-                <div class="form-group" style="margin-bottom:0; flex:2;">
-                    <label style="margin-bottom:0;">알람 설정 시간</label>
-                    <input type="time" id="modalAlarmTime" class="form-control" style="margin-top:5px;">
-                </div>
-                <div style="flex:1; text-align:right; margin-top:20px;">
-                    <button class="btn" id="modalAlarmToggleBtn" onclick="toggleModalAlarmState()" style="width:100%;"></button>
-                </div>
-            </div>
-
-            <div class="modal-footer" style="justify-content: space-between; margin-top:25px;">
-                <button class="btn btn-danger" onclick="deleteEventData()" style="background-color: var(--danger-color);">🗑️ 일정 삭제</button>
+            <div class="card" style="grid-column: span 2;">
                 <div>
-                    <button class="btn" onclick="closeModal('detailModal')" style="background:#ccc; margin-right:5px;">취소</button>
-                    <button class="btn btn-primary" onclick="updateEventData()">저장</button>
+                    <h3>주간 식단표 (일정 클릭 시 수정/삭제 가능)</h3>
+                    <div class="form-group">
+                        <label>기준 날짜 선택</label>
+                        <input type="date" id="diet-view-date" onchange="renderWeeklyDiet()">
+                    </div>
+                    <table id="diet-timetable">
+                        <thead>
+                            <tr id="diet-week-headers"><th>구분 (시간)</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th>일</th></tr>
+                        </thead>
+                        <tbody id="diet-timetable-body"></tbody>
+                    </table>
+                </div>
+                <div class="action-box">
+                    <button class="btn btn-danger" id="btn-diet-week-del" onclick="deleteWeeklyData('meals')">주간 일정 삭제</button>
+                    <button class="btn btn-danger" id="btn-diet-all-del" onclick="clearAllData('meals')">전체 일정 삭제</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <div id="exercise-page" class="page">
+        <h2>💪 운동 관리</h2>
+        <div class="grid">
+            <div class="card">
+                <div>
+                    <h3>운동 계획 입력</h3>
+                    <form id="exercise-form" onsubmit="saveExercise(event)">
+                        <div class="form-group"><label>운동명</label><input type="text" id="ex-name" required></div>
+                        <div class="form-group"><label>날짜</label><input type="date" id="ex-date" required></div>
+                        <div class="form-group"><label>시작 시간</label><input type="time" id="ex-start" required></div>
+                        <div class="form-group"><label>끝나는 시간</label><input type="time" id="ex-end" required></div>
+                        <div class="form-group"><label>소모 칼로리 (kcal)</label><input type="number" id="ex-kcal" required></div>
+                        <div class="form-group"><label>⏰ 알람 시간 설정 (선택)</label><input type="time" id="ex-alarm"></div>
+                        <button type="submit" class="btn" id="btn-workout-submit">운동 계획 저장</button>
+                    </form>
+                </div>
+            </div>
+            <div class="card" style="grid-column: span 2;">
+                <div>
+                    <h3>주간 운동표 (일정 클릭 시 수정/삭제 가능)</h3>
+                    <div class="form-group">
+                        <label>기준 날짜 선택</label>
+                        <input type="date" id="ex-view-date" onchange="renderWeeklyExercise()">
+                    </div>
+                    <table id="ex-timetable">
+                        <thead>
+                            <tr id="ex-week-headers"><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th>일</th></tr>
+                        </thead>
+                        <tbody id="ex-timetable-body"></tbody>
+                    </table>
+                </div>
+                <div class="action-box">
+                    <button class="btn btn-danger" id="btn-work-week-del" onclick="deleteWeeklyData('workouts')">주간 일정 삭제</button>
+                    <button class="btn btn-danger" id="btn-work-all-del" onclick="clearAllData('workouts')">전체 일정 삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="calendar-page" class="page">
+        <h2>📅 종합 달력 (일정 클릭 시 상세 제어 가능)</h2>
+        <div style="display: flex; gap:15px; margin-bottom: 1rem; align-items: center; flex-wrap: wrap;">
+            <button class="btn" onclick="changeMonth(-1)">◀ 이전달</button>
+            
+            <div class="calendar-title-container" onclick="toggleCalendarSelectors(true)">
+                <h3 id="calendar-month-year" style="margin:0;">2026년 06월</h3>
+            </div>
+            <div id="calendar-select-box" class="date-picker-inline">
+                <select id="select-year" onchange="handleSelectDateChange()"></select>
+                <select id="select-month" onchange="handleSelectDateChange()"></select>
+                <button class="btn" style="padding: 0.4rem 0.8rem;" onclick="toggleCalendarSelectors(false)">확인</button>
+            </div>
+
+            <button class="btn" onclick="changeMonth(1)">다음달 ▶</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid-header"></div>
+        <div class="calendar-grid" id="calendar-days"></div>
+        
+        <div class="action-box" style="margin-top: 1.5rem;">
+            <button class="btn btn-danger" id="btn-cal-month-del" onclick="deleteMonthlyData()">한달 일정 삭제</button>
+            <button class="btn btn-danger" id="btn-cal-all-del" onclick="clearAllCalendarData()">전체 일정 삭제</button>
+        </div>
+    </div>
+</div>
+
+<div id="auth-modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeAuthModal()">&times;</span>
+        <h3 id="auth-modal-title">🔐 로그인</h3>
+        
+        <div class="form-group">
+            <label>이메일 아이디</label>
+            <input type="email" id="auth-email" placeholder="example@email.com" required>
+        </div>
+        <div class="form-group" id="auth-password-group">
+            <label>비밀번호</label>
+            <input type="password" id="auth-password" placeholder="6자리 이상 비밀번호" required>
+        </div>
+
+        <div class="modal-action-btns" style="margin-top:1rem;">
+            <button class="btn" id="btn-auth-submit" onclick="handleAuthSubmit()">로그인하기</button>
+            <div class="auth-helper-links">
+                <span id="auth-toggle-text" onclick="toggleAuthMode()">계정이 없으신가요? 회원가입하기</span>
+                <span id="auth-find-pw-text" onclick="toggleFindPasswordMode()">비밀번호 찾기</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h3 id="modal-title">🎯 일정 상세 관리</h3>
+        
+        <div class="form-group">
+            <label id="modal-label-date">날짜</label>
+            <input type="date" id="modal-date">
+        </div>
+        
+        <div class="form-group" id="modal-time-container">
+            <label id="modal-label-time">시간</label>
+            <input type="time" id="modal-time-start">
+        </div>
+        
+        <div class="form-group" id="modal-time-end-container">
+            <label>종료 시간</label>
+            <input type="time" id="modal-time-end">
+        </div>
+
+        <div class="form-group">
+            <label id="modal-label-name">명칭</label>
+            <input type="text" id="modal-name">
+        </div>
+
+        <div class="form-group">
+            <label>칼로리 (kcal)</label>
+            <input type="number" id="modal-kcal">
+        </div>
+
+        <div class="form-group">
+            <label>⏰ 알람 시간 설정</label>
+            <input type="time" id="modal-alarm-time">
+        </div>
+
+        <div class="modal-action-btns">
+            <button class="btn" onclick="updateEventData()">저장</button>
+            <div class="modal-action-row">
+                <button class="btn" id="btn-toggle-alarm" style="background:#f59e0b; flex:1.2;" onclick="toggleAlarmActive()">🔔 알람 켜기/끄기</button>
+                <button class="btn" style="background:#dc2626; flex:1;" onclick="deleteEventData()">🗑️ 일정 삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="app.js"></script>
 </body>
 </html>
