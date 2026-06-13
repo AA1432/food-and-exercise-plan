@@ -1,23 +1,3 @@
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyAJWI6bzgha26NWSfJaFCZ9OKoafeYqPwQ",
-    authDomain: "food-and-exercise-plan.firebaseapp.com",
-    projectId: "food-and-exercise-plan",
-    storageBucket: "food-and-exercise-plan.firebasestorage.app",
-    messagingSenderId: "363003929755",
-    appId: "1:363003929755:web:dde1ad36eebd6861eb123e"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
-
 // ================= Firebase SDK 임포트 및 초기화 =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
@@ -38,13 +18,13 @@ import {
 
 // ⚠️ 여기에 본인의 Firebase 웹 앱 SDK 구성 키를 붙여넣으세요!
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+    apiKey: "AIzaSyAJWI6bzgha26NWSfJaFCZ9OKoafeYqPwQ",
+    authDomain: "food-and-exercise-plan.firebaseapp.com",
+    projectId: "food-and-exercise-plan",
+    storageBucket: "food-and-exercise-plan.firebasestorage.app",
+    messagingSenderId: "363003929755",
+    appId: "1:363003929755:web:dde1ad36eebd6861eb123e"
+  };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
